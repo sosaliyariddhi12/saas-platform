@@ -13,7 +13,10 @@ exports.getOrder = async (req, res) => {
     const totalOrders = orders.length;
 
     let totalSales = 0;
+
     orders.forEach((order) => (totalSales += parseFloat(order.total_price)));
+
+    const productNames = orders.map((order) => order.line_items.map((item) => item.name)).flat();
 
     const conversionRate = totalOrders > 0 ? totalOrders / totalSales : 0;
 
@@ -23,6 +26,7 @@ exports.getOrder = async (req, res) => {
       totalOrders,
       totalSales,
       conversionRate,
+      productNames,
     });
   } catch (error) {
     return res.status(500).json({
